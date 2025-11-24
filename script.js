@@ -35,7 +35,8 @@ let ipBlocked = false;
 let openprofile = false;
 
 const communityDiscordLink = "https://discord.com/invite/THgK9CgyYJ";
-const server = "wss://server.meower.org/?v=1";
+let server = "wss://server.meower.org/?v=1";
+let api = "https://api.meower.org";
 
 const pfpCache = {};
 const postCache = { livechat: [] };  // {chatId: [post, post, ...]} (up to 25 posts for inactive chats)
@@ -495,7 +496,7 @@ function main() {
                 textarea.blur();
             } else if (event.keyCode >= 48 && event.keyCode <= 90 && textarea === document.activeElement && !settingsstuff().invtyping && lastTyped+3000 < Date.now()) {
                 lastTyped = Date.now();
-                fetch(`https://api.meower.org/${page === "home" ? "" : "chats/"}${page}/typing`, {
+                fetch(`${api}/${page === "home" ? "" : "chats/"}${page}/typing`, {
                     method: "POST",
                     headers: { token: localStorage.getItem("token") }
                 });
@@ -884,7 +885,7 @@ function loadPfp(username, userData, button) {
 
             if (!userData) {
                 try {
-                    const resp = await fetch(`https://api.meower.org/users/${username}`);
+                    const resp = await fetch(`${api}/users/${username}`);
                     userData = await resp.json();
                 } catch (error) {
                     console.error("Failed to fetch:", error);
@@ -983,7 +984,7 @@ async function loadreply(postOrigin, replyid) {
     try {
         let replydata = postCache[postOrigin].find(post => post._id === replyid);
         if (!replydata) {
-            const replyresp = await fetch(`https://api.meower.org/posts?id=${replyid}`, {
+            const replyresp = await fetch(`${api}/posts?id=${replyid}`, {
                 headers: { token: localStorage.getItem("token") }
             });
             if (replyresp.status === 404) {
@@ -1384,7 +1385,7 @@ async function sendpost() {
         if (repst) {
             const newCont = repst.p.replace(new RegExp(old, 'g'), newtx);
 
-            fetch(`https://api.meower.org/posts?id=${repst._id}`, {
+            fetch(`${api}/posts?id=${repst._id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -1398,7 +1399,7 @@ async function sendpost() {
     }
 
     if (editIndicator.hasAttribute("data-postid")) {
-        fetch(`https://api.meower.org/posts?id=${editIndicator.getAttribute("data-postid")}`, {
+        fetch(`${api}/posts?id=${editIndicator.getAttribute("data-postid")}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -1455,7 +1456,7 @@ async function sendpost() {
             });
         document.getElementById("msgs").prepend(placeholder);
 
-        const response = await fetch(`https://api.meower.org/${page === "home" ? "home" : `posts/${page}`}`, {
+        const response = await fetch(`${api}/${page === "home" ? "home" : `posts/${page}`}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -1770,7 +1771,7 @@ function opendm(username) {
         }
     }
 
-    fetch(`https://api.meower.org/users/${username}/dm`, {
+    fetch(`${api}/users/${username}/dm`, {
         method: 'GET',
         headers: {
             'token': localStorage.getItem("token")
@@ -1796,7 +1797,7 @@ function loadchat(chatId) {
     page = chatId;
     pre = chatId;
     if (!["home", "inbox", "livechat"].includes(chatId) && !chatCache[chatId]) {
-        fetch(`https://api.meower.org/chats/${chatId}`, {
+        fetch(`${api}/chats/${chatId}`, {
             headers: {token: localStorage.getItem("token")}
         })
         .then(response => {
@@ -1972,7 +1973,7 @@ async function loadposts(pageNo) {
     else path = `/posts/${chatId}`;
 
     // Get posts from API
-    const response = await fetch(`https://api.meower.org${path}?page=${pageNo}`, {
+    const response = await fetch(`${api}${path}?page=${pageNo}`, {
         headers: {
             token: localStorage.getItem("token")
         }
@@ -2006,7 +2007,7 @@ function loadrecent(user) {
     pre = "recent";
     recentuser = user;
     if (!recentCache[recentuser]) {
-        fetch(`https://api.meower.org/users/${recentuser}/posts`, {
+        fetch(`${api}/users/${recentuser}/posts`, {
             headers: {token: localStorage.getItem("token")}
         })
         .then(response => {
@@ -2083,7 +2084,7 @@ async function loadrecentposts(pageNo) {
     var path = `/users/${recentuser}/posts`;
 
     // Get posts from API
-    const response = await fetch(`https://api.meower.org${path}?page=${pageNo}`, {
+    const response = await fetch(`${api}${path}?page=${pageNo}`, {
         headers: {
             token: localStorage.getItem("token")
         }
@@ -2543,7 +2544,7 @@ async function editAuthenticator(authenticatorId) {
     const nickname = document.getElementById("nickname-input").value;
 
     try {
-        const resp = await fetch(`https://api.meower.org/me/authenticators/${authenticatorId}`, {
+        const resp = await fetch(`${api}/me/authenticators/${authenticatorId}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -2604,7 +2605,7 @@ async function removeAuthenticator(authenticatorId) {
             throw new Error(lang().info.nopass);
         }
 
-        const resp = await fetch(`https://api.meower.org/me/authenticators/${authenticatorId}`, {
+        const resp = await fetch(`${api}/me/authenticators/${authenticatorId}`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
@@ -2669,7 +2670,7 @@ async function resetRecoveryCode() {
             throw new Error(lang().info.nopass);
         }
 
-        const resp = await fetch(`https://api.meower.org/me/reset-mfa-recovery-code`, {
+        const resp = await fetch(`${api}/me/reset-mfa-recovery-code`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -2791,7 +2792,7 @@ function loadProfile() {
         </div>
     `;
 
-    fetch(`https://api.meower.org/users/${username}`)
+    fetch(`${api}/users/${username}`)
     .then(response => {
         if (!response.ok) {
             throw new Error('User not found');
@@ -2900,7 +2901,7 @@ function chatSettings(chatId) {
 	setTop();
 
 	if (!chatCache[chatId]) {
-		fetch(`https://api.meower.org/chats/${chatId}`, {
+		fetch(`${api}/chats/${chatId}`, {
 				headers: {
 					token: localStorage.getItem("token")
 				}
@@ -3026,7 +3027,7 @@ function chatMembers(chatId) {
 	setTop();
 
 	if (!chatCache[chatId]) {
-		fetch(`https://api.meower.org/chats/${chatId}`, {
+		fetch(`${api}/chats/${chatId}`, {
 				headers: {
 					token: localStorage.getItem("token")
 				}
@@ -4006,7 +4007,7 @@ function autoresize() {
 
 async function deletePost(postid) {
     try {
-        const response = await fetch(`https://api.meower.org/posts?id=${postid}`, {
+        const response = await fetch(`${api}/posts?id=${postid}`, {
             method: "DELETE",
             headers: {
                 "token": localStorage.getItem("token")
@@ -4195,7 +4196,7 @@ function closeChatModal(e, chatId, chatName) {
 
 function closeChat(chatId) {
     closemodal();
-    fetch(`https://api.meower.org/chats/${chatId}`, {
+    fetch(`${api}/chats/${chatId}`, {
         method: "DELETE",
         headers: { token: localStorage.getItem("token") }
     });
@@ -4269,7 +4270,7 @@ function openUsrModal(uId) {
                 <iframe class="profile" src="profile/index.html?u=${uId}"></iframe>
                 `;
                 
-                fetch(`https://api.meower.org/users/${uId}`)
+                fetch(`${api}/users/${uId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.avatar_color !== "!color") {
@@ -4350,7 +4351,7 @@ function reportModal(id) {
 }
 
 function sendReport(id) {
-    fetch(`https://api.meower.org/posts/${id}/report`, {
+    fetch(`${api}/posts/${id}/report`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -4592,7 +4593,7 @@ function modUserModal(user) {
 }
 
 async function loadmoduser(user) {
-    fetch(`https://api.meower.org/admin/users/${user}`, {
+    fetch(`${api}/admin/users/${user}`, {
         method: "GET",
         headers: {
             "token": localStorage.getItem("token")
@@ -4677,7 +4678,7 @@ async function loadmoduser(user) {
             `;
         });
     
-        fetch(`https://api.meower.org/admin/notes/${data.uuid}`, {
+        fetch(`${api}/admin/notes/${data.uuid}`, {
             method: "GET",
             headers: {
                 "token": localStorage.getItem("token")
@@ -4738,7 +4739,7 @@ function modPostModal(postid) {
 }
 
 async function loadmodpost(postid) {
-    fetch(`https://api.meower.org/admin/posts/${postid}`, {
+    fetch(`${api}/admin/posts/${postid}`, {
         method: "GET",
         headers: {
             "token": localStorage.getItem("token")
@@ -4747,7 +4748,7 @@ async function loadmodpost(postid) {
     .then(response => response.json())
     .then(data => {
         if (data) {
-            fetch(`https://api.meower.org/users/${data.u}`)
+            fetch(`${api}/users/${data.u}`)
                 .then(response => response.json())
                 .then(userData => {
                     if (userData) {
@@ -4799,7 +4800,7 @@ async function loadmodpost(postid) {
                             rpfp.classList.add('svg-avatar');
                         }
 
-                        fetch(`https://api.meower.org/admin/notes/${postid}`, {
+                        fetch(`${api}/admin/notes/${postid}`, {
                             method: "GET",
                             headers: {
                                 "token": localStorage.getItem("token")
@@ -4836,7 +4837,7 @@ async function loadmodpost(postid) {
 
 async function modDeletePost(postid) {
     try {
-        const response = await fetch(`https://api.meower.org/admin/posts/${postid}`, {
+        const response = await fetch(`${api}/admin/posts/${postid}`, {
             method: "DELETE",
             headers: {
                 "token": localStorage.getItem("token")
@@ -4856,7 +4857,7 @@ async function modDeletePost(postid) {
 function updateNote(postid) {
     const note = document.getElementById('mod-post-note').value;
     
-    fetch(`https://api.meower.org/admin/notes/${postid}`, {
+    fetch(`${api}/admin/notes/${postid}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -4877,7 +4878,7 @@ function updateNote(postid) {
 function sendAlert(userid) {
     const note = document.getElementById('mod-user-alert').value;
     
-    fetch(`https://api.meower.org/admin/users/${userid}/alert`, {
+    fetch(`${api}/admin/users/${userid}/alert`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -4897,7 +4898,7 @@ function sendAlert(userid) {
 
 function closeReport(postid, action) {
     if (action) {
-        fetch(`https://api.meower.org/admin/reports/${postid}`, {
+        fetch(`${api}/admin/reports/${postid}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -4914,7 +4915,7 @@ function closeReport(postid, action) {
             console.error("Error updating report:", error);
         });
     } else {
-        fetch(`https://api.meower.org/admin/reports/${postid}`, {
+        fetch(`${api}/admin/reports/${postid}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -5598,7 +5599,7 @@ function blockUser(user) {
         blockedUsers[user] = true;
     }
     
-    fetch(`https://api.meower.org/users/${user}/relationship`, {
+    fetch(`${api}/users/${user}/relationship`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -6017,7 +6018,7 @@ function transferOwnershipModal(chatId) {
 
 function transferOwnership(chatId) {
     const user = document.getElementById("chat-mem-input").value;
-    fetch(`https://api.meower.org/chats/${chatId}/members/${user}/transfer`, {
+    fetch(`${api}/chats/${chatId}/members/${user}/transfer`, {
         method: "POST",
         headers: {
             token: localStorage.getItem("token"),
@@ -6039,7 +6040,7 @@ function transferOwnership(chatId) {
 
 function addMembertoGC(chatId) {
     const user = document.getElementById("chat-mem-input").value;
-    fetch(`https://api.meower.org/chats/${chatId}/members/${user}`, {
+    fetch(`${api}/chats/${chatId}/members/${user}`, {
         method: "PUT",
         headers: {
             token: localStorage.getItem("token"),
@@ -6061,7 +6062,7 @@ function addMembertoGC(chatId) {
 }
 
 function removeMemberFromGC(chatId, user) {
-    fetch(`https://api.meower.org/chats/${chatId}/members/${user}`, {
+    fetch(`${api}/chats/${chatId}/members/${user}`, {
         method: "DELETE",
         headers: {
             token: localStorage.getItem("token"),
@@ -6088,7 +6089,7 @@ function notify(u, p, location, val) {
         loc = location
     } else {
         if (!chatCache[location]) {
-            fetch(`https://api.meower.org/chats/${location}`, {
+            fetch(`${api}/chats/${location}`, {
                 headers: {token: localStorage.getItem("token")}
             })
             .then(response => {
@@ -6154,7 +6155,7 @@ function notify(u, p, location, val) {
         }
     }
     let pfp
-    fetch(`https://api.meower.org/users/${user}`)
+    fetch(`${api}/users/${user}`)
     .then(response => response.json())
     .then(data => {
         pfp = `https://uploads.meower.org/icons/${data.avatar}`;
