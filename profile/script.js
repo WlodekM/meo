@@ -1,10 +1,10 @@
-let meourl = 'https://eris.pages.dev/meo'
+let meourl = 'https://fagger.goog-search.eu.org/'
 
 function fetchprofile() {
     const urlParams = new URLSearchParams(window.location.search);
     const username = urlParams.get('u');
 
-    fetch(`https://api.meower.org/users/${username}`)
+    fetch(`https://fagger-api.goog-search.eu.org/users/${username}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('User not found');
@@ -40,7 +40,7 @@ function fetchprofile() {
 
             if (data.avatar) {
                 profilecont.innerHTML = `
-                <div class="avatar-big pfp-inner" style="border: 6px solid #${data.avatar_color}; background-color:#${data.avatar_color}; background-image: url(https://uploads.meower.org/icons/${data.avatar});"></div>
+                <div class="avatar-big pfp-inner" style="border: 6px solid #${data.avatar_color}; background-color:#${data.avatar_color}; background-image: url(https://${uploadsUrl}/icons/${data.avatar});"></div>
                 `
             } else if (data.pfp_data) {                    
                 profilecont.innerHTML = `
@@ -253,7 +253,7 @@ function updateprofile() {
         }
     };
 
-    xhttp.open("PATCH", "https://api.meower.org/me/config");
+    xhttp.open("PATCH", "https://fagger-api.goog-search.eu.org/me/config");
 
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.setRequestHeader("token", token);
@@ -266,7 +266,7 @@ function updateprofile() {
     if (file) {
         const formData = new FormData();
         formData.append("file", file);
-            fetch("https://uploads.meower.org/icons", {
+            fetch(`https://${uploadsUrl}/icons`, {
                 method: "POST",
                 headers: {
                     "Authorization": token
@@ -288,7 +288,7 @@ function updateprofile() {
 
 function opendm(user) {
     const token = localStorage.getItem("token");
-    const url = `https://api.meower.org/users/${user}/dm`;
+    const url = `https://fagger-api.goog-search.eu.org/users/${user}/dm`;
 
     fetch(url, {
         method: 'GET',

@@ -3,455 +3,455 @@ let opened = 0
 let shiftKeyPressed = false;
 
 function togglePicker() {
-    if (opened === 0) {
-        loadpicker();
-        opened = 1;
-    } else {
-        closepicker();
-        opened = 0;
-    }
+	if (opened === 0) {
+		loadpicker();
+		opened = 1;
+	} else {
+		closepicker();
+		opened = 0;
+	}
 }
 
 function closepicker() {
-    let picker = document.getElementById("emojipicker");
-    picker.style.display = "none";
-    const mdlback = document.querySelector(".emoji-back");
-    mdlback.style.display = "none";
-    picker = document.querySelector(".emojipicker");
-    if (picker) {
-        picker.innerHTML = ``;
-        opened = 0;
-    }
+	let picker = document.getElementById("emojipicker");
+	picker.style.display = "none";
+	const mdlback = document.querySelector(".emoji-back");
+	mdlback.style.display = "none";
+	picker = document.querySelector(".emojipicker");
+	if (picker) {
+		picker.innerHTML = ``;
+		opened = 0;
+	}
 }
 
 function addemoji(emoji) {
-    msg.setRangeText(emoji, msg.selectionStart, msg.selectionEnd, "end");
-    autoresize();
-    event.preventDefault();
-    if (event) {
-        if (!event.shiftKey) {
-            closepicker();
-            msg.focus();
-        }
-    }
-    closemodal();
+	msg.setRangeText(emoji, msg.selectionStart, msg.selectionEnd, "end");
+	autoresize();
+	event.preventDefault();
+	if (event) {
+		if (!event.shiftKey) {
+			closepicker();
+			msg.focus();
+		}
+	}
+	closemodal();
 }
 
 function loadpicker() {
-    pickerhtm();
-    let picker = document.getElementById("emojipicker");
-    picker.style.display = "flex";
-    const mdlback = document.querySelector(".emoji-back");
-    mdlback.style.display = "block";
-    if (document.querySelector(".emojipicker")) {
-        picker = document.querySelector(".emojipicker");
-        picker.innerHTML = pickerhtm()
-    } else {
-        picker.innerHTML = `<div class="emojipicker">` + pickerhtm() + `</div>`
-    }
-    if (settingsstuff().reducemotion) {
-        document.querySelector(".emojipicker").classList.add("reduced-ani");
-    } else {
-        document.querySelector(".emojipicker").classList.remove("reduced-ani");
-    }
+	pickerhtm();
+	let picker = document.getElementById("emojipicker");
+	picker.style.display = "flex";
+	const mdlback = document.querySelector(".emoji-back");
+	mdlback.style.display = "block";
+	if (document.querySelector(".emojipicker")) {
+		picker = document.querySelector(".emojipicker");
+		picker.innerHTML = pickerhtm()
+	} else {
+		picker.innerHTML = `<div class="emojipicker">` + pickerhtm() + `</div>`
+	}
+	if (settingsstuff().reducemotion) {
+		document.querySelector(".emojipicker").classList.add("reduced-ani");
+	} else {
+		document.querySelector(".emojipicker").classList.remove("reduced-ani");
+	}
 
-    // Custom emojis from chats
-    for (const chat of Object.values(chatCache)) {
-        const customEmojis = chat.emojis;
-        if (!customEmojis.length) continue;
+	// Custom emojis from chats
+	for (const chat of Object.values(chatCache)) {
+		const customEmojis = chat.emojis;
+		if (!customEmojis.length) continue;
 
-        const sidebarButton = document.createElement("button");
-        sidebarButton.classList.add("emojibuttonside");
-        sidebarButton.onclick = () => emjpage(`custom-${chat._id}`);
+		const sidebarButton = document.createElement("button");
+		sidebarButton.classList.add("emojibuttonside");
+		sidebarButton.onclick = () => emjpage(`custom-${chat._id}`);
 
-        const chatIconElem = document.createElement("div");
-        chatIconElem.classList.add("avatar-small");
-        chatIconElem.classList.add("pfp-inner");
-        chatIconElem.setAttribute("alt", "Avatar");
-        if (chat.type === 0) {
-            if (chat.icon) {
-                chatIconElem.style.backgroundImage = `url(https://uploads.meower.org/icons/${chat.icon})`;
-            } else {
-                chatIconElem.style.backgroundImage = `url(images/GC.svg)`;
-            }
-            if (!chat.icon) {
-                chatIconElem.style.border = "2px solid #" + '1f5831';
-            } else if (chat.icon_color) {
-                chatIconElem.style.border = "2px solid #" + chat.icon_color;
-            } else {
-                chatIconElem.style.border = "2px solid #" + '000';
-            }
-        } else {
-            // this is so hacky :p
-            // - Tnix
-            loadPfp(chat.members.find(v => v !== localStorage.getItem("username")))
-            .then(pfpElem => {
-                if (pfpElem) {
-                    let bgImageUrl = pfpElem.style.backgroundImage;
-                    if (bgImageUrl) {
-                        bgImageUrl = bgImageUrl.slice(5, -2);
-                    }
-                    chatIconElem.style.border = pfpElem.style.border.replace("3px", "2px");
-                    chatIconElem.style.backgroundColor = pfpElem.style.border.replace("3px solid", "");
-                    chatIconElem.style.backgroundImage = `url("${bgImageUrl}")`;
-                    chatIconElem.classList.add("pfp-inner");
-                    if (pfpElem.classList.contains("svg-avatar")) {
-                        chatIconElem.classList.add("svg-avatar");
-                        chatIconElem.style.backgroundColor = '#fff';
-                    }
-                }
-            });
-        }
-        chatIconElem.style.width = "100%";
-        chatIconElem.style.height = "auto";
-        sidebarButton.appendChild(chatIconElem);
+		const chatIconElem = document.createElement("div");
+		chatIconElem.classList.add("avatar-small");
+		chatIconElem.classList.add("pfp-inner");
+		chatIconElem.setAttribute("alt", "Avatar");
+		if (chat.type === 0) {
+			if (chat.icon) {
+				chatIconElem.style.backgroundImage = `url(https://${uploadsUrl}/icons/${chat.icon})`;
+			} else {
+				chatIconElem.style.backgroundImage = `url(images/GC.svg)`;
+			}
+			if (!chat.icon) {
+				chatIconElem.style.border = "2px solid #" + '1f5831';
+			} else if (chat.icon_color) {
+				chatIconElem.style.border = "2px solid #" + chat.icon_color;
+			} else {
+				chatIconElem.style.border = "2px solid #" + '000';
+			}
+		} else {
+			// this is so hacky :p
+			// - Tnix
+			loadPfp(chat.members.find(v => v !== localStorage.getItem("username")))
+				.then(pfpElem => {
+					if (pfpElem) {
+						let bgImageUrl = pfpElem.style.backgroundImage;
+						if (bgImageUrl) {
+							bgImageUrl = bgImageUrl.slice(5, -2);
+						}
+						chatIconElem.style.border = pfpElem.style.border.replace("3px", "2px");
+						chatIconElem.style.backgroundColor = pfpElem.style.border.replace("3px solid", "");
+						chatIconElem.style.backgroundImage = `url("${bgImageUrl}")`;
+						chatIconElem.classList.add("pfp-inner");
+						if (pfpElem.classList.contains("svg-avatar")) {
+							chatIconElem.classList.add("svg-avatar");
+							chatIconElem.style.backgroundColor = '#fff';
+						}
+					}
+				});
+		}
+		chatIconElem.style.width = "100%";
+		chatIconElem.style.height = "auto";
+		sidebarButton.appendChild(chatIconElem);
 
-        document.querySelector(".emojisidebar").appendChild(sidebarButton);
+		document.querySelector(".emojisidebar").appendChild(sidebarButton);
 
-        const section = document.createElement("div");
-        section.classList.add("emojisec");
-        section.id = `custom-${chat._id}`;
-        const headerContainer = document.createElement("div");
-        headerContainer.classList.add("emojiheader");
-        const header = document.createElement("h3");
-        header.innerText = chat.nickname || `@${chat.members.find(v => v !== localStorage.getItem("username"))}`;
-        headerContainer.appendChild(header);
-        section.appendChild(headerContainer);
-        for (const emoji of customEmojis) {
-            const addButton = document.createElement("button");
-            addButton.classList.add("emojibutton");
-            addButton.title = emoji.name;
-            addButton.onclick = () => addemoji(`<:${emoji._id}>`);
-            const img = document.createElement("img");
-            img.src = `https://uploads.meower.org/emojis/${emoji._id}`;
-            img.alt = emoji.name;
-            img.height = 32;
-            addButton.appendChild(img);
-            section.appendChild(addButton);
-        }
-        document.querySelector(".emojicont").appendChild(section);
-    }
+		const section = document.createElement("div");
+		section.classList.add("emojisec");
+		section.id = `custom-${chat._id}`;
+		const headerContainer = document.createElement("div");
+		headerContainer.classList.add("emojiheader");
+		const header = document.createElement("h3");
+		header.innerText = chat.nickname || `@${chat.members.find(v => v !== localStorage.getItem("username"))}`;
+		headerContainer.appendChild(header);
+		section.appendChild(headerContainer);
+		for (const emoji of customEmojis) {
+			const addButton = document.createElement("button");
+			addButton.classList.add("emojibutton");
+			addButton.title = emoji.name;
+			addButton.onclick = () => addemoji(`<:${emoji._id}>`);
+			const img = document.createElement("img");
+			img.src = `https://${uploadsUrl}/emojis/${emoji._id}`;
+			img.alt = emoji.name;
+			img.height = 32;
+			addButton.appendChild(img);
+			section.appendChild(addButton);
+		}
+		document.querySelector(".emojicont").appendChild(section);
+	}
 
-    document.getElementById("emojin").focus();
+	document.getElementById("emojin").focus();
 }
 
 function uploadEmojiModal(chatid) {
-    document.documentElement.style.overflow = "hidden";
-    
-    const mdlbck = document.querySelector('.modal-back');
-    if (mdlbck) {
-        mdlbck.style.display = 'flex';
-        
-        const mdl = mdlbck.querySelector('.modal');
-        mdl.id = 'mdl-uptd';
-        if (mdl) {
-            const mdlt = mdl.querySelector('.modal-top');
-            if (mdlt) {
-                mdlt.innerHTML = `
+	document.documentElement.style.overflow = "hidden";
+
+	const mdlbck = document.querySelector('.modal-back');
+	if (mdlbck) {
+		mdlbck.style.display = 'flex';
+
+		const mdl = mdlbck.querySelector('.modal');
+		mdl.id = 'mdl-uptd';
+		if (mdl) {
+			const mdlt = mdl.querySelector('.modal-top');
+			if (mdlt) {
+				mdlt.innerHTML = `
                 <h3>${lang().action.uploademoji}</h3>
                 <div>
                 <input id="emoji-nick-input" class="mdl-inp" placeholder="${lang().action.name}" minlength="1" maxlength="32">
                 <input type="file" id="emoji-file" class="mdl-file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="preUploadEmoji()">
                 </div>
                 `;
-            }
-            const mdbt = mdl.querySelector('.modal-bottom');
-            if (mdbt) {
-                mdbt.innerHTML = `
+			}
+			const mdbt = mdl.querySelector('.modal-bottom');
+			if (mdbt) {
+				mdbt.innerHTML = `
                 <button id="create-emoji" class="modal-back-btn" onclick="uploadEmoji('${chatid}')">${lang().action.create}</button>
                 `;
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 function editEmojiName(chatid, emojiid, name) {
-    document.documentElement.style.overflow = "hidden";
-    
-    const mdlbck = document.querySelector('.modal-back');
-    if (mdlbck) {
-        mdlbck.style.display = 'flex';
-        
-        const mdl = mdlbck.querySelector('.modal');
-        mdl.id = 'mdl-uptd';
-        if (mdl) {
-            const mdlt = mdl.querySelector('.modal-top');
-            if (mdlt) {
-                mdlt.innerHTML = `
+	document.documentElement.style.overflow = "hidden";
+
+	const mdlbck = document.querySelector('.modal-back');
+	if (mdlbck) {
+		mdlbck.style.display = 'flex';
+
+		const mdl = mdlbck.querySelector('.modal');
+		mdl.id = 'mdl-uptd';
+		if (mdl) {
+			const mdlt = mdl.querySelector('.modal-top');
+			if (mdlt) {
+				mdlt.innerHTML = `
                 <h3>${lang().action.editemoji}</h3>
                 <div>
                 <input id="emoji-nick-input" class="mdl-inp" placeholder="${escapeHTML(name)}" minlength="1" maxlength="32">
                 </div>
                 `;
-            }
-            const mdbt = mdl.querySelector('.modal-bottom');
-            if (mdbt) {
-                mdbt.innerHTML = `
+			}
+			const mdbt = mdl.querySelector('.modal-bottom');
+			if (mdbt) {
+				mdbt.innerHTML = `
                 <button id="create-emoji" class="modal-back-btn" onclick="pushEmojiName('${chatid}', '${emojiid}')">${lang().action.confirm}</button>
                 `;
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 async function pushEmojiName(chatid, emojiId) {
-    const name = document.getElementById('emoji-nick-input').value; // emoji name probably
-    const createBtn = document.getElementById("create-emoji");
-    createBtn.innerText = "Updating...";
-    const apiResp = await fetch(`https://api.meower.org/chats/${chatid}/emojis/${emojiId}`, {
-        method: "PATCH",
-        headers: {
-            'Content-Type': 'application/json',
-            token: localStorage.getItem("token"),
-        },
-        body: JSON.stringify({ name }),
-    });
+	const name = document.getElementById('emoji-nick-input').value; // emoji name probably
+	const createBtn = document.getElementById("create-emoji");
+	createBtn.innerText = "Updating...";
+	const apiResp = await fetch(`${api}/chats/${chatid}/emojis/${emojiId}`, {
+		method: "PATCH",
+		headers: {
+			'Content-Type': 'application/json',
+			token: localStorage.getItem("token"),
+		},
+		body: JSON.stringify({ name }),
+	});
 
-    closemodal("Emoji updated!"); // add localization to these
+	closemodal("Emoji updated!"); // add localization to these
 }
 
 async function removeEmoji(chatid, emojiId) {
-    const apiResp = await fetch(`https://api.meower.org/chats/${chatid}/emojis/${emojiId}`, {
-        method: "Delete",
-        headers: {
-            'Content-Type': 'application/json',
-            token: localStorage.getItem("token"),
-        },
-        body: JSON.stringify({ name }),
-    });
+	const apiResp = await fetch(`${api}/chats/${chatid}/emojis/${emojiId}`, {
+		method: "Delete",
+		headers: {
+			'Content-Type': 'application/json',
+			token: localStorage.getItem("token"),
+		},
+		body: JSON.stringify({ name }),
+	});
 
-    closemodal("Emoji deleted!");
+	closemodal("Emoji deleted!");
 }
 
 function preUploadEmoji() {
-    const file = document.getElementById('emoji-file').files[0];
-    if (file.size > 1 << 20) {
-        closemodal("File too large! Emojis can be a maximum of 1 MiB.");
-    } else if (!["image/png", "image/jpeg", "image/webp", "image/gif"].includes(file.type)) {
-        closemodal("Unsupported file type! An emoji must be a PNG, JPEG, WebP, or GIF.");
-    }
+	const file = document.getElementById('emoji-file').files[0];
+	if (file.size > 1 << 20) {
+		closemodal("File too large! Emojis can be a maximum of 1 MiB.");
+	} else if (!["image/png", "image/jpeg", "image/webp", "image/gif"].includes(file.type)) {
+		closemodal("Unsupported file type! An emoji must be a PNG, JPEG, WebP, or GIF.");
+	}
 
-    const nick = document.getElementById('emoji-nick-input');
-    nick.value = file.name.split('.').slice(0, -1).join('.');
+	const nick = document.getElementById('emoji-nick-input');
+	nick.value = file.name.split('.').slice(0, -1).join('.');
 }
 
 async function uploadEmoji(chatid) {
-    const name = document.getElementById('emoji-nick-input').value; // emoji name probably
-    const file = document.getElementById('emoji-file').files[0]; // emoji file probably need to redo these
-    const createBtn = document.getElementById("create-emoji");
+	const name = document.getElementById('emoji-nick-input').value; // emoji name probably
+	const file = document.getElementById('emoji-file').files[0]; // emoji file probably need to redo these
+	const createBtn = document.getElementById("create-emoji");
 
-    createBtn.disabled = true;
+	createBtn.disabled = true;
 
-    createBtn.innerText = "Uploading...";
-    const formData = new FormData();
-    formData.append("file", file);
-    const uploadsResp = await fetch("https://uploads.meower.org/emojis", {
-        method: "POST",
-        headers: { Authorization: localStorage.getItem("token") },
-        body: formData,
-    });
-    const emojiId = (await uploadsResp.json()).id;
+	createBtn.innerText = "Uploading...";
+	const formData = new FormData();
+	formData.append("file", file);
+	const uploadsResp = await fetch(`https://${uploadsUrl}/emojis`, {
+		method: "POST",
+		headers: { Authorization: localStorage.getItem("token") },
+		body: formData,
+	});
+	const emojiId = (await uploadsResp.json()).id;
 
-    createBtn.innerText = "Creating...";
-    const apiResp = await fetch(`https://api.meower.org/chats/${chatid}/emojis/${emojiId}`, {
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json',
-            token: localStorage.getItem("token"),
-        },
-        body: JSON.stringify({ name }),
-    });
+	createBtn.innerText = "Creating...";
+	const apiResp = await fetch(`${api}/chats/${chatid}/emojis/${emojiId}`, {
+		method: "PUT",
+		headers: {
+			'Content-Type': 'application/json',
+			token: localStorage.getItem("token"),
+		},
+		body: JSON.stringify({ name }),
+	});
 
-    closemodal("Emoji created!");
+	closemodal("Emoji created!");
 }
 
-document.addEventListener('input', function(event) {
-    if (opened === 1) {
-        const searchQuery = document.getElementById('emojin').value.toLowerCase();
-        const emojiButtons = document.querySelectorAll('.emojibutton');
+document.addEventListener('input', function (event) {
+	if (opened === 1) {
+		const searchQuery = document.getElementById('emojin').value.toLowerCase();
+		const emojiButtons = document.querySelectorAll('.emojibutton');
 
-        if (searchQuery) {
-            const aa = document.querySelectorAll(".emojisec");
-            aa.forEach(function(bb) {
-                bb.style.display = "flex";
+		if (searchQuery) {
+			const aa = document.querySelectorAll(".emojisec");
+			aa.forEach(function (bb) {
+				bb.style.display = "flex";
 
-            });
-            const ee = document.querySelectorAll(".emojiheader");
-            ee.forEach(function(ff) {
-                ff.style.display = "none";
-            });
-        } else {
-            const aa = document.querySelectorAll(".emojisec");
-            aa.forEach(function(bb) {
-                bb.style.removeProperty("display");
-            });
-            const ee = document.querySelectorAll(".emojiheader");
-            ee.forEach(function(ff) {
-                ff.style.removeProperty("display");
-            });
-            document.getElementById("people").style.display = "flex";
-        }
-    
-        emojiButtons.forEach(function(button) {
-            const emojiTitle = button.getAttribute('title').toLowerCase();
-            const emojiEmoji = button.innerText.toLowerCase();
-    
-            if (emojiTitle.includes(searchQuery) || emojiEmoji.includes(searchQuery)) {
-                button.style.display = 'inline-block';
-            } else {
-                button.style.display = 'none';
-            }
-        });
-    }
+			});
+			const ee = document.querySelectorAll(".emojiheader");
+			ee.forEach(function (ff) {
+				ff.style.display = "none";
+			});
+		} else {
+			const aa = document.querySelectorAll(".emojisec");
+			aa.forEach(function (bb) {
+				bb.style.removeProperty("display");
+			});
+			const ee = document.querySelectorAll(".emojiheader");
+			ee.forEach(function (ff) {
+				ff.style.removeProperty("display");
+			});
+			document.getElementById("people").style.display = "flex";
+		}
+
+		emojiButtons.forEach(function (button) {
+			const emojiTitle = button.getAttribute('title').toLowerCase();
+			const emojiEmoji = button.innerText.toLowerCase();
+
+			if (emojiTitle.includes(searchQuery) || emojiEmoji.includes(searchQuery)) {
+				button.style.display = 'inline-block';
+			} else {
+				button.style.display = 'none';
+			}
+		});
+	}
 });
 
 function emjpage(page) {
-    const cc = document.querySelectorAll(".emojisec");
-    cc.forEach(function(dd) {
-        dd.style.removeProperty("display")
-    });
-    document.getElementById(page).style.display = "flex";
+	const cc = document.querySelectorAll(".emojisec");
+	cc.forEach(function (dd) {
+		dd.style.removeProperty("display")
+	});
+	document.getElementById(page).style.display = "flex";
 }
 
 function emjpagem(page) {
-    const cc = document.querySelectorAll(".emojisec-mobile");
-    cc.forEach(function(dd) {
-        dd.style.removeProperty("display")
-    });
-    document.getElementById(page).style.display = "grid";
+	const cc = document.querySelectorAll(".emojisec-mobile");
+	cc.forEach(function (dd) {
+		dd.style.removeProperty("display")
+	});
+	document.getElementById(page).style.display = "grid";
 }
 
 function fstemj() {
-    addemoji(document.querySelector('.emojibutton:not([style*="display: none;"])').getAttribute('onclick').match(/'(.*?)'/)[1]);
+	addemoji(document.querySelector('.emojibutton:not([style*="display: none;"])').getAttribute('onclick').match(/'(.*?)'/)[1]);
 }
 
 function emojimodal() {
-    document.documentElement.style.overflow = "hidden";
-    
-    const mdlbck = document.querySelector('.modal-back');
-    if (mdlbck) {
-        mdlbck.style.display = 'flex';
-        
-        const mdl = mdlbck.querySelector('.modal');
-        mdl.id = '';
-        if (mdl) {
-            const mdlt = mdl.querySelector('.modal-top');
-            if (mdlt) {
-                mdlt.innerHTML = `
+	document.documentElement.style.overflow = "hidden";
+
+	const mdlbck = document.querySelector('.modal-back');
+	if (mdlbck) {
+		mdlbck.style.display = 'flex';
+
+		const mdl = mdlbck.querySelector('.modal');
+		mdl.id = '';
+		if (mdl) {
+			const mdlt = mdl.querySelector('.modal-top');
+			if (mdlt) {
+				mdlt.innerHTML = `
                 <div class="emojicont-mobile"></div>
                 `;
-            }
-            const mdbt = mdl.querySelector('.modal-bottom');
-            if (mdbt) {
-                mdbt.innerHTML = `
+			}
+			const mdbt = mdl.querySelector('.modal-bottom');
+			if (mdbt) {
+				mdbt.innerHTML = `
                 <div class="emojisidebar-mobile"></div>
                 `;
-            }
-            let ag = 1;
-            for (const chat of Object.values(chatCache)) {
-                const customEmojis = chat.emojis;
-                if (!customEmojis.length) continue;
+			}
+			let ag = 1;
+			for (const chat of Object.values(chatCache)) {
+				const customEmojis = chat.emojis;
+				if (!customEmojis.length) continue;
 
-                const sidebarButton = document.createElement("button");
-                sidebarButton.classList.add("emojibuttonside-mobile");
-                sidebarButton.onclick = () => emjpagem(`custom-${chat._id}`);
+				const sidebarButton = document.createElement("button");
+				sidebarButton.classList.add("emojibuttonside-mobile");
+				sidebarButton.onclick = () => emjpagem(`custom-${chat._id}`);
 
-                const chatIconElem = document.createElement("div");
-                chatIconElem.classList.add("avatar-small");
-                chatIconElem.classList.add("pfp-inner");
-                chatIconElem.setAttribute("alt", "Avatar");
-                if (chat.type === 0) {
-                    if (chat.icon) {
-                        chatIconElem.style.backgroundImage = `url(https://uploads.meower.org/icons/${chat.icon})`;
-                    } else {
-                        chatIconElem.style.backgroundImage = `url(images/GC.svg)`;
-                    }
-                    if (!chat.icon) {
-                        chatIconElem.style.border = "2px solid #" + '1f5831';
-                    } else if (chat.icon_color) {
-                        chatIconElem.style.border = "2px solid #" + chat.icon_color;
-                    } else {
-                        chatIconElem.style.border = "2px solid #" + '000';
-                    }
-                } else {
-                    // this is so hacky :p
-                    // - Tnix
-                    loadPfp(chat.members.find(v => v !== localStorage.getItem("username")))
-                    .then(pfpElem => {
-                        if (pfpElem) {
-                            let bgImageUrl = pfpElem.style.backgroundImage;
-                            if (bgImageUrl) {
-                                bgImageUrl = bgImageUrl.slice(5, -2);
-                            }
-                            chatIconElem.style.border = pfpElem.style.border.replace("3px", "2px");
-                            chatIconElem.style.backgroundColor = pfpElem.style.border.replace("3px solid", "");
-                            chatIconElem.style.backgroundImage = `url("${bgImageUrl}")`;
-                            chatIconElem.classList.add("pfp-inner");
-                            if (pfpElem.classList.contains("svg-avatar")) {
-                                chatIconElem.classList.add("svg-avatar");
-                                chatIconElem.style.backgroundColor = '#fff';
-                            }
-                        }
-                    });
-                }
-                chatIconElem.style.width = "100%";
-                chatIconElem.style.height = "auto";
-                sidebarButton.appendChild(chatIconElem);
+				const chatIconElem = document.createElement("div");
+				chatIconElem.classList.add("avatar-small");
+				chatIconElem.classList.add("pfp-inner");
+				chatIconElem.setAttribute("alt", "Avatar");
+				if (chat.type === 0) {
+					if (chat.icon) {
+						chatIconElem.style.backgroundImage = `url(https://${uploadsUrl}/icons/${chat.icon})`;
+					} else {
+						chatIconElem.style.backgroundImage = `url(images/GC.svg)`;
+					}
+					if (!chat.icon) {
+						chatIconElem.style.border = "2px solid #" + '1f5831';
+					} else if (chat.icon_color) {
+						chatIconElem.style.border = "2px solid #" + chat.icon_color;
+					} else {
+						chatIconElem.style.border = "2px solid #" + '000';
+					}
+				} else {
+					// this is so hacky :p
+					// - Tnix
+					loadPfp(chat.members.find(v => v !== localStorage.getItem("username")))
+						.then(pfpElem => {
+							if (pfpElem) {
+								let bgImageUrl = pfpElem.style.backgroundImage;
+								if (bgImageUrl) {
+									bgImageUrl = bgImageUrl.slice(5, -2);
+								}
+								chatIconElem.style.border = pfpElem.style.border.replace("3px", "2px");
+								chatIconElem.style.backgroundColor = pfpElem.style.border.replace("3px solid", "");
+								chatIconElem.style.backgroundImage = `url("${bgImageUrl}")`;
+								chatIconElem.classList.add("pfp-inner");
+								if (pfpElem.classList.contains("svg-avatar")) {
+									chatIconElem.classList.add("svg-avatar");
+									chatIconElem.style.backgroundColor = '#fff';
+								}
+							}
+						});
+				}
+				chatIconElem.style.width = "100%";
+				chatIconElem.style.height = "auto";
+				sidebarButton.appendChild(chatIconElem);
 
-                mdbt.querySelector(".emojisidebar-mobile").appendChild(sidebarButton);
+				mdbt.querySelector(".emojisidebar-mobile").appendChild(sidebarButton);
 
-                const section = document.createElement("div");
-                section.classList.add("emojisec-mobile");
-                section.id = `custom-${chat._id}`;
-                if (ag) {
-                    section.style.display = "grid"
-                }
-                const headerContainer = document.createElement("div");
-                headerContainer.classList.add("emojiheader");
-                const header = document.createElement("h3");
-                header.innerText = chat.nickname || `@${chat.members.find(v => v !== localStorage.getItem("username"))}`;
-                headerContainer.appendChild(header);
-                section.appendChild(headerContainer);
-                for (const emoji of customEmojis) {
-                    const addButton = document.createElement("button");
-                    addButton.classList.add("emojibutton");
-                    addButton.title = emoji.name;
-                    addButton.onclick = () => addemoji(`<:${emoji._id}>`);
-                    const img = document.createElement("img");
-                    img.src = `https://uploads.meower.org/emojis/${emoji._id}`;
-                    img.alt = emoji.name;
-                    img.height = 32;
-                    addButton.appendChild(img);
-                    section.appendChild(addButton);
-                }
-                mdlt.querySelector(".emojicont-mobile").appendChild(section);
-                ag = 0;
-            }
-        }
-    }
+				const section = document.createElement("div");
+				section.classList.add("emojisec-mobile");
+				section.id = `custom-${chat._id}`;
+				if (ag) {
+					section.style.display = "grid"
+				}
+				const headerContainer = document.createElement("div");
+				headerContainer.classList.add("emojiheader");
+				const header = document.createElement("h3");
+				header.innerText = chat.nickname || `@${chat.members.find(v => v !== localStorage.getItem("username"))}`;
+				headerContainer.appendChild(header);
+				section.appendChild(headerContainer);
+				for (const emoji of customEmojis) {
+					const addButton = document.createElement("button");
+					addButton.classList.add("emojibutton");
+					addButton.title = emoji.name;
+					addButton.onclick = () => addemoji(`<:${emoji._id}>`);
+					const img = document.createElement("img");
+					img.src = `https://${uploadsUrl}/emojis/${emoji._id}`;
+					img.alt = emoji.name;
+					img.height = 32;
+					addButton.appendChild(img);
+					section.appendChild(addButton);
+				}
+				mdlt.querySelector(".emojicont-mobile").appendChild(section);
+				ag = 0;
+			}
+		}
+	}
 }
 
 function pickerhtm() {
-    let emojisidebar = ``
-    let emojicont = `<div class="emojisearch"><input type="text" class="emjinpt" id="emojin" placeholder="Find the perfect emoji..." autofill="none"></div>`
-    for (const [id, value] of Object.entries(defaultEmoji)) {
-        let emojisec = `<div class="emojiheader"><h3>${value.name}</h3></div>`
-        for (const [title, emoji] of Object.entries(value.emoji)) {
-            emojisec += `<button class="emojibutton" title="${title}" onclick="addemoji('${emoji}')">${emoji}</button>`
-        }
-        emojisidebar += `<button class="emojibuttonside" onclick="emjpage('${id}')">${value.icon}</button>`
-        emojicont += `<div class="emojisec" id="${id}" style="display: flex;">${emojisec}</div>`
-    }
-    return `<div class="emojisidebar">${emojisidebar}</div><div class="emojicont">${emojicont}</div>`;
+	let emojisidebar = ``
+	let emojicont = `<div class="emojisearch"><input type="text" class="emjinpt" id="emojin" placeholder="Find the perfect emoji..." autofill="none"></div>`
+	for (const [id, value] of Object.entries(defaultEmoji)) {
+		let emojisec = `<div class="emojiheader"><h3>${value.name}</h3></div>`
+		for (const [title, emoji] of Object.entries(value.emoji)) {
+			emojisec += `<button class="emojibutton" title="${title}" onclick="addemoji('${emoji}')">${emoji}</button>`
+		}
+		emojisidebar += `<button class="emojibuttonside" onclick="emjpage('${id}')">${value.icon}</button>`
+		emojicont += `<div class="emojisec" id="${id}" style="display: flex;">${emojisec}</div>`
+	}
+	return `<div class="emojisidebar">${emojisidebar}</div><div class="emojicont">${emojicont}</div>`;
 }
 
 function groupcat() {
-    page = "groupcat";
-    pre = "groupcat";
-    setTop();
-    const pageContainer = document.getElementById("main");
-    pageContainer.innerHTML = 
-    `
+	page = "groupcat";
+	pre = "groupcat";
+	setTop();
+	const pageContainer = document.getElementById("main");
+	pageContainer.innerHTML =
+		`
     <h1>GROUP CAT ATTICU EDITION</h1>
     <button onclick="loadchat('home')" class="button blockeduser">AAAH THERE'S TOO MANY</button>
     <div class="groupcat">
@@ -557,5 +557,5 @@ function groupcat() {
         <img class="groupcat-cat" alt="MEOW" title="MEOW" src="images/atticu.png" height="100" style="left: 6.17108vw; top: 67.4407vh; animation-delay: -2.26017s; animation-duration: 7.65046s;">
         <div id='msgs'></div>
     </div>
-    `; 
+    `;
 }

@@ -3,71 +3,74 @@
 // im bad at naming things ok
 
 let whitelist = [
-    "https://uploads.meower.org/",
-    "https://meower.org/",
-    "https://http.meower.org/",
-    "https://assets.meower.org/",
-    "https://forums.meower.org/",
-    "https://go.meower.org/",
-    "https://hedgedoc.meower.org/",
-    "https://docs.meower.org/",
-    "https://i.ibb.co/",
-    "https://u.cubeupload.com/",
-    "https://cubeupload.com/",
-    "https://media.tenor.com/",
-    "https://tenor.com/",
-    "https://c.tenor.com/",
-    "https://assets.scratch.mit.edu/",
-    "https://cdn2.scratch.mit.edu/",
-    "https://cdn.scratch.mit.edu/",
-    "https://uploads.scratch.mit.edu/",
-    "https://cdn.discordapp.com/",
-    "https://media.discordapp.net/",
+	`https://${uploadsUrl}/`,
+	// "https://meower.org/",
+	// "https://http.meower.org/",
+	// "https://assets.meower.org/",
+	// "https://forums.meower.org/",
+	// "https://go.meower.org/",
+	// "https://hedgedoc.meower.org/",
+	// "https://docs.meower.org/",
+	"https://i.ibb.co/",
+	"https://u.cubeupload.com/",
+	"https://cubeupload.com/",
+	"https://media.tenor.com/",
+	"https://tenor.com/",
+	"https://c.tenor.com/",
+	"https://assets.scratch.mit.edu/",
+	"https://cdn2.scratch.mit.edu/",
+	"https://cdn.scratch.mit.edu/",
+	"https://uploads.scratch.mit.edu/",
+	"https://cdn.discordapp.com/",
+	"https://media.discordapp.net/",
+	"https://desloratadyna.net/",
+	"https://catbox.moe/",
+	"https://wlpc.goog-search.eu.org/",
 ];
 
 function escapeHTML(content) {
-    const escapedinput = content
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
+	const escapedinput = content
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;')
 
-    return escapedinput;
+	return escapedinput;
 }
 
-function erimd(content,isProfile) {
-    const fixProfile = isProfile ? "parent." : "";
-    const text = content
-        .replace(/(?:^|(?<=\s|<p>))@([\w-]+)(?![^<]*?<\/code>)/g, `<span id="username" class="attachment" onclick="${fixProfile}openUsrModal(\'$1\')">@$1</span>`)
-        .replace(/&lt;:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.webp?size=96&quality=lossless" alt="$1" title="$1" class="emoji">')
-        .replace(/&lt;a:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.gif?size=96&quality=lossless" alt="$1" title="$1" class="emoji">')
-        .replace(/<a\s+href="https:\/\/eris\.pages\.dev\/meo\/profile\?u=([\w-]+)".*?>(.*?)<\/a>/g, `<span id="username" class="attachment" onclick="${fixProfile}openUsrModal(\'$1\')">@$1</span>`)
-        .replace(/<a\s+href="https:\/\/eris\.pages\.dev\/meo\?gc=([\w-]+)".*?>(.*?)<\/a>/g, `<span id="username" class="attachment" onclick="${fixProfile}loadchat(\'$1\')">#$1</span>`)
-        .replace(/(?:^|\n|<p>)-# (.*)$/gm, '<span class="subsubheader">$1</span>')
-        .replace(/<pre><code>\s*\*([\s\S]*?)<\/code><\/pre>/gm, '<pre class="undertale"><code>*$1</code></pre>')
-    return text;
+function erimd(content, isProfile) {
+	const fixProfile = isProfile ? "parent." : "";
+	const text = content
+		.replace(/(?:^|(?<=\s|<p>))@([\w-]+)(?![^<]*?<\/code>)/g, `<span id="username" class="attachment" onclick="${fixProfile}openUsrModal(\'$1\')">@$1</span>`)
+		.replace(/&lt;:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.webp?size=96&quality=lossless" alt="$1" title="$1" class="emoji">')
+		.replace(/&lt;a:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.gif?size=96&quality=lossless" alt="$1" title="$1" class="emoji">')
+		.replace(/<a\s+href="https:\/\/eris\.pages\.dev\/meo\/profile\?u=([\w-]+)".*?>(.*?)<\/a>/g, `<span id="username" class="attachment" onclick="${fixProfile}openUsrModal(\'$1\')">@$1</span>`)
+		.replace(/<a\s+href="https:\/\/eris\.pages\.dev\/meo\?gc=([\w-]+)".*?>(.*?)<\/a>/g, `<span id="username" class="attachment" onclick="${fixProfile}loadchat(\'$1\')">#$1</span>`)
+		.replace(/(?:^|\n|<p>)-# (.*)$/gm, '<span class="subsubheader">$1</span>')
+		.replace(/<pre><code>\s*\*([\s\S]*?)<\/code><\/pre>/gm, '<pre class="undertale"><code>*$1</code></pre>')
+	return text;
 }
 
 function meowerEmojis(content, emojis) {
-    for (const emoji of emojis) {
-        content = content.replaceAll(`&lt;:${emoji._id}&gt;`, `<img src="https://uploads.meower.org/emojis/${emoji._id}" alt="${escapeHTML(emoji.name)}" title="${escapeHTML(emoji.name)}" class="emoji">`);
-    }
-    return content;
+	for (const emoji of emojis) {
+		content = content.replaceAll(`&lt;:${emoji._id}&gt;`, `<img src="https://${uploadsUrl}/emojis/${emoji._id}" alt="${escapeHTML(emoji.name)}" title="${escapeHTML(emoji.name)}" class="emoji">`);
+	}
+	return content;
 }
 
 function loadinputs() {
-// this should be called preChatLoad or something
-    setTop()
-    let textin
-    
-    pendingAttachments = [];
+	// this should be called preChatLoad or something
+	setTop()
+	let textin
 
-    textin = `
+	pendingAttachments = [];
+
+	textin = `
     <textarea type="text" oninput="autoresize()" class="message-input text" id="msg" rows="1" autocomplete="false" placeholder="${lang().meo_messagebox}" aria-label="Message Input"></textarea>
     `
 
-    const inputs = `
+	const inputs = `
     <div class="message-outer">
         <div class="message-container">
             <button class="message-tool button" id="attach" value="Attachments" onclick="selectFiles()" aria-label="Attachments">
@@ -123,308 +126,308 @@ function loadinputs() {
         <svg viewBox="0 0 448 512" height="19" width="19"><path fill="currentColor" d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"></path></svg>
     </div>
     `;
-    return inputs;
+	return inputs;
 }
 
 function buttonbadges(content) {
-    content.querySelectorAll('p a').forEach(link => {
-        link.setAttribute('target', '_blank');
-        if (settingsstuff().underlinelinks) {
-            link.classList.add("underline");
-        }
+	content.querySelectorAll('p a').forEach(link => {
+		link.setAttribute('target', '_blank');
+		if (settingsstuff().underlinelinks) {
+			link.classList.add("underline");
+		}
 
-        let url;
-        try {
-            url = new URL(link.getAttribute('href'));
-        } catch (e) {
-            return;
-        }
-        const fileExtension = url.pathname.split('.').pop().toLowerCase().split('?')[0];
-        const fileDomain = url.href.includes('tenor.com/view');
+		let url;
+		try {
+			url = new URL(link.getAttribute('href'));
+		} catch (e) {
+			return;
+		}
+		const fileExtension = url.pathname.split('.').pop().toLowerCase().split('?')[0];
+		const fileDomain = url.href.includes('tenor.com/view');
 
-        if ((['png', 'jpg', 'jpeg', 'webp', 'gif', 'mp4', 'webm', 'mov', 'm4v', 'svg'].includes(fileExtension)) || fileDomain) {
-            link.classList.add('attachment', 'tooltip', 'bottom', 'right', 'long');
-            link.setAttribute('data-tooltip', url.href);
-            link.innerHTML = `<svg class="icon_ecf39b icon__13ad2" xmlns="http://www.w3.org/2000/svg" width="0.8em" height="0.8em" viewBox="0 0 24 24">
+		if ((['png', 'jpg', 'jpeg', 'webp', 'gif', 'mp4', 'webm', 'mov', 'm4v', 'svg'].includes(fileExtension)) || fileDomain) {
+			link.classList.add('attachment', 'tooltip', 'bottom', 'right', 'long');
+			link.setAttribute('data-tooltip', url.href);
+			link.innerHTML = `<svg class="icon_ecf39b icon__13ad2" xmlns="http://www.w3.org/2000/svg" width="0.8em" height="0.8em" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M10.57 4.01a6.97 6.97 0 0 1 9.86 0l.54.55a6.99 6.99 0 0 1 0 9.88l-7.26 7.27a1 1 0 0 1-1.42-1.42l7.27-7.26a4.99 4.99 0 0 0 0-7.06L19 5.43a4.97 4.97 0 0 0-7.02 0l-8.02 8.02a3.24 3.24 0 1 0 4.58 4.58l6.24-6.24a1.12 1.12 0 0 0-1.58-1.58l-3.5 3.5a1 1 0 0 1-1.42-1.42l3.5-3.5a3.12 3.12 0 1 1 4.42 4.42l-6.24 6.24a5.24 5.24 0 0 1-7.42-7.42l8.02-8.02Z"></path></svg><span> attachments</span>`;
-        } else if (url.href === "https://eris.pages.dev/meo/") {
-            link.classList.add('attachment');
-            link.innerHTML = `<span class="ext-link-wrapper"><span class="link-icon-wrapper">
+		} else if (url.href === "https://eris.pages.dev/meo/") {
+			link.classList.add('attachment');
+			link.innerHTML = `<span class="ext-link-wrapper"><span class="link-icon-wrapper">
             <svg width="12" height="12" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                 <g>
                     <path fill="currentColor" d="M468.42 20.5746L332.997 65.8367C310.218 58.8105 284.517 55.049 255.499 55.6094C226.484 55.049 200.78 58.8105 178.004 65.8367L42.5803 20.5746C18.9102 16.3251 -1.81518 36.2937 2.5967 59.1025L38.7636 200.894C18.861 248.282 12.1849 296.099 12.1849 325.027C12.1849 399.343 44.6613 492 255.499 492C466.339 492 498.815 399.343 498.815 325.027C498.815 296.099 492.139 248.282 472.237 200.894L508.404 59.1025C512.814 36.2937 492.09 16.3251 468.42 20.5746Z"></path>
                 </g>
             </svg>
             </span>meo</span>`;
-        } else {
-            const socials = [
-                { pattern: /^https:\/\/scratch\.mit\.edu\/users\/([^\/?#]+)\/?$/, icon: 'scratch_1x.png' },
-                { pattern: /^https:\/\/www\.youtube\.com\/@([^\/?#]+)\/?$/, icon: 'youtube_1x.png' },
-                { pattern: /^https:\/\/twitter\.com\/([^\/?#]+)\/?$/, icon: 'twitter_1x.png' },
-                { pattern: /^https:\/\/www\.facebook\.com\/([^\/?#]+)\/?$/, icon: 'facebook_1x.png' },
-                { pattern: /^https:\/\/x\.com\/([^\/?#]+)\/?$/, icon: 'twitter_1x.png' },
-                { pattern: /^https:\/\/www\.instagram\.com\/([^\/?#]+)\/?$/, icon: 'instagram_1x.png' },
-                { pattern: /^https:\/\/darflen\.com\/users\/([^\/?#]+)\/?$/, icon: 'darf.png' },
-                { pattern: /^https:\/\/wasteof\.money\/users\/([^\/?#]+)\/?$/, icon: 'wasteof.png' },
-                { pattern: /^https:\/\/eris\.pages\.dev\/meo\/profile\?u=([^\/?#]+)\/?$/, icon: 'meo_1x.png' },
-                { pattern: /^https:\/\/www\.tiktok\.com\/@([^\/?#]+)\/?$/, icon: 'tiktok_1x.png' },
-                { pattern: /^https:\/\/discord\.gg\/([^\/?#]+)\/?$/, icon: 'discord_1x.png' },
-                { pattern: /^https:\/\/github\.com\/([^\/?#]+)\/?$/, icon: 'github.png' }
+		} else {
+			const socials = [
+				{ pattern: /^https:\/\/scratch\.mit\.edu\/users\/([^\/?#]+)\/?$/, icon: 'scratch_1x.png' },
+				{ pattern: /^https:\/\/www\.youtube\.com\/@([^\/?#]+)\/?$/, icon: 'youtube_1x.png' },
+				{ pattern: /^https:\/\/twitter\.com\/([^\/?#]+)\/?$/, icon: 'twitter_1x.png' },
+				{ pattern: /^https:\/\/www\.facebook\.com\/([^\/?#]+)\/?$/, icon: 'facebook_1x.png' },
+				{ pattern: /^https:\/\/x\.com\/([^\/?#]+)\/?$/, icon: 'twitter_1x.png' },
+				{ pattern: /^https:\/\/www\.instagram\.com\/([^\/?#]+)\/?$/, icon: 'instagram_1x.png' },
+				{ pattern: /^https:\/\/darflen\.com\/users\/([^\/?#]+)\/?$/, icon: 'darf.png' },
+				{ pattern: /^https:\/\/wasteof\.money\/users\/([^\/?#]+)\/?$/, icon: 'wasteof.png' },
+				{ pattern: /^https:\/\/eris\.pages\.dev\/meo\/profile\?u=([^\/?#]+)\/?$/, icon: 'meo_1x.png' },
+				{ pattern: /^https:\/\/www\.tiktok\.com\/@([^\/?#]+)\/?$/, icon: 'tiktok_1x.png' },
+				{ pattern: /^https:\/\/discord\.gg\/([^\/?#]+)\/?$/, icon: 'discord_1x.png' },
+				{ pattern: /^https:\/\/github\.com\/([^\/?#]+)\/?$/, icon: 'github.png' }
 
-            ];
+			];
 
-            for (let { pattern, icon } of socials) {
-                const match = url.href.match(pattern);
-                if (match) {
-                    const username = match[1];
-                    link.classList.add('ext-link');
-                    link.innerHTML = `<span class="ext-link-wrapper"><span class="link-icon-wrapper">
+			for (let { pattern, icon } of socials) {
+				const match = url.href.match(pattern);
+				if (match) {
+					const username = match[1];
+					link.classList.add('ext-link');
+					link.innerHTML = `<span class="ext-link-wrapper"><span class="link-icon-wrapper">
                     <img width="14px" class="ext-icon" src="images/links/${icon}"></span>${username}</span>`;
-                    break;
-                }
-            }
-        }
-    });
-    
-    return content.innerHTML;
+					break;
+				}
+			}
+		}
+	});
+
+	return content.innerHTML;
 }
 
 function attach(attachment) {
-    let link;
-    if (attachment.filename) {
-        link = `https://uploads.meower.org/attachments/${attachment.id}/${attachment.filename}`;
-    } else {
-        link = `https://uploads.meower.org/attachments/${attachment.id}`;
-    }
-    if (link) {
-        const baseURL = link.split('?')[0];
-        const fileName = baseURL.split('/').pop();
+	let link;
+	if (attachment.filename) {
+		link = `https://${uploadsUrl}/attachments/${attachment.id}/${attachment.filename}`;
+	} else {
+		link = `https://${uploadsUrl}/attachments/${attachment.id}`;
+	}
+	if (link) {
+		const baseURL = link.split('?')[0];
+		const fileName = baseURL.split('/').pop();
 
-        let embeddedElement;
+		let embeddedElement;
 
-        if (attachment.mime.includes("image/") && attachment.size < (12 << 20)) {
-            if (whitelist.some(source => link.includes(source))) {
-                const element = document.createElement("div");
-                element.classList.add("image-outer");
+		if (attachment.mime.includes("image/") && attachment.size < (12 << 20)) {
+			if (whitelist.some(source => link.includes(source))) {
+				const element = document.createElement("div");
+				element.classList.add("image-outer");
 
-                let imgElement = document.createElement("img");
-                imgElement.setAttribute("src", link + '?preview');
-                imgElement.setAttribute("onclick", `openImage('${link}')`);
-                imgElement.setAttribute("alt", fileName);
-                imgElement.setAttribute("title", fileName);
-                imgElement.classList.add("embed");
-                if (settingsstuff().hideimages) {
-                    imgElement.classList.add("spoiler");
-                }
+				let imgElement = document.createElement("img");
+				imgElement.setAttribute("src", link + '?preview');
+				imgElement.setAttribute("onclick", `openImage('${link}')`);
+				imgElement.setAttribute("alt", fileName);
+				imgElement.setAttribute("title", fileName);
+				imgElement.classList.add("embed");
+				if (settingsstuff().hideimages) {
+					imgElement.classList.add("spoiler");
+				}
 
-                element.appendChild(imgElement);
-                embeddedElement = element;
-            }
-        } else if (attachment.mime.includes("video/") && attachment.size < (12 << 20)) {
-            const element = document.createElement("div");
-            element.classList.add("media-outer");
+				element.appendChild(imgElement);
+				embeddedElement = element;
+			}
+		} else if (attachment.mime.includes("video/") && attachment.size < (12 << 20)) {
+			const element = document.createElement("div");
+			element.classList.add("media-outer");
 
-            let mediaElement = document.createElement("video");
-            mediaElement.setAttribute("src", baseURL + '?preview');
-            mediaElement.setAttribute("controls", "controls");
-            mediaElement.setAttribute("playsinline", "");
-            mediaElement.setAttribute("preload", "metadata");
-            mediaElement.setAttribute("alt", fileName);
-            mediaElement.setAttribute("title", fileName);
-            mediaElement.classList.add("embed");
-            
-            element.appendChild(mediaElement);
-            embeddedElement = element;
-        } else if (attachment.mime.includes("audio/") && attachment.size < (12 << 20)) {
+			let mediaElement = document.createElement("video");
+			mediaElement.setAttribute("src", baseURL + '?preview');
+			mediaElement.setAttribute("controls", "controls");
+			mediaElement.setAttribute("playsinline", "");
+			mediaElement.setAttribute("preload", "metadata");
+			mediaElement.setAttribute("alt", fileName);
+			mediaElement.setAttribute("title", fileName);
+			mediaElement.classList.add("embed");
 
-            const element = document.createElement("div");
-            element.classList.add("media-outer");
+			element.appendChild(mediaElement);
+			embeddedElement = element;
+		} else if (attachment.mime.includes("audio/") && attachment.size < (12 << 20)) {
 
-            let mediaElement = document.createElement("audio");
-            mediaElement.setAttribute("src", baseURL);
-            mediaElement.setAttribute("controls", "controls");
-            mediaElement.setAttribute("alt", fileName);
-            mediaElement.setAttribute("title", fileName);
-            mediaElement.classList.add("embed");
-            
-            element.appendChild(mediaElement);
-            embeddedElement = element;
-        } else {
-            const element = document.createElement("div");
-            element.classList.add("download");
-            if (settingsstuff().underlinelinks) {
-                element.classList.add("underline");
-            }
-            element.innerHTML = `
+			const element = document.createElement("div");
+			element.classList.add("media-outer");
+
+			let mediaElement = document.createElement("audio");
+			mediaElement.setAttribute("src", baseURL);
+			mediaElement.setAttribute("controls", "controls");
+			mediaElement.setAttribute("alt", fileName);
+			mediaElement.setAttribute("title", fileName);
+			mediaElement.classList.add("embed");
+
+			element.appendChild(mediaElement);
+			embeddedElement = element;
+		} else {
+			const element = document.createElement("div");
+			element.classList.add("download");
+			if (settingsstuff().underlinelinks) {
+				element.classList.add("underline");
+			}
+			element.innerHTML = `
             <a href="${link}?download" target="_blank">${attachment.filename}</a>
             <span class="subsubheader">${formatSize(attachment.size)}</span>
             `;
-            embeddedElement = element;
-        }
-        return embeddedElement;
-    }
+			embeddedElement = element;
+		}
+		return embeddedElement;
+	}
 }
 
 function embed(links) {
-    if (links) {
-        let embeddedElements = [];
+	if (links) {
+		let embeddedElements = [];
 
-        links.forEach(link => {
-            const baseURL = link.split('?')[0];
-            const fileExtension = baseURL.split('.').pop().toLowerCase();
-            const fileName = baseURL.split('/').pop();
+		links.forEach(link => {
+			const baseURL = link.split('?')[0];
+			const fileExtension = baseURL.split('.').pop().toLowerCase();
+			const fileName = baseURL.split('/').pop();
 
-            let embeddedElement;
+			let embeddedElement;
 
-            if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(fileExtension)) {
-                if (whitelist.some(source => link.includes(source))  || settingsstuff().imagewhitelist) {
-                    const element = document.createElement("div");
-                    element.classList.add("image-outer");
+			if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(fileExtension)) {
+				if (whitelist.some(source => link.includes(source)) || settingsstuff().imagewhitelist) {
+					const element = document.createElement("div");
+					element.classList.add("image-outer");
 
-                    let imgElement = document.createElement("img");
-                    const url = new URL(link);
-                    imgElement.setAttribute("src", url.href);
-                    imgElement.setAttribute("onclick", `openImage('${url.href}')`);
-                    imgElement.setAttribute("alt", fileName);
-                    imgElement.setAttribute("title", fileName);
-                    imgElement.classList.add("embed");
-                    if (settingsstuff().hideimages) {
-                        imgElement.classList.add("spoiler");
-                    }
+					let imgElement = document.createElement("img");
+					const url = new URL(link);
+					imgElement.setAttribute("src", url.href);
+					imgElement.setAttribute("onclick", `openImage('${url.href}')`);
+					imgElement.setAttribute("alt", fileName);
+					imgElement.setAttribute("title", fileName);
+					imgElement.classList.add("embed");
+					if (settingsstuff().hideimages) {
+						imgElement.classList.add("spoiler");
+					}
 
-                    element.appendChild(imgElement);
+					element.appendChild(imgElement);
 
-                    embeddedElement = element;
-                }
-            } else if (['mp4', 'webm', 'mov', 'mkv'].includes(fileExtension)) {
-                const element = document.createElement("div");
-                element.classList.add("media-outer");
-                
-                let mediaElement = document.createElement("video");
-                mediaElement.setAttribute("src", baseURL);
-                mediaElement.setAttribute("controls", "controls");
-                mediaElement.setAttribute("playsinline", "");
-                mediaElement.setAttribute("preload", "metadata");
-                mediaElement.setAttribute("alt", fileName);
-                mediaElement.setAttribute("title", fileName);
-                mediaElement.setAttribute("style", "max-width:300px");
-                mediaElement.classList.add("embed");
+					embeddedElement = element;
+				}
+			} else if (['mp4', 'webm', 'mov', 'mkv'].includes(fileExtension)) {
+				const element = document.createElement("div");
+				element.classList.add("media-outer");
 
-                element.appendChild(mediaElement);
-                embeddedElement = element;
-            } else if (['mp3', 'wav', 'ogg', 'flac'].includes(fileExtension)) {
-                const element = document.createElement("div");
-                element.classList.add("media-outer");
+				let mediaElement = document.createElement("video");
+				mediaElement.setAttribute("src", baseURL);
+				mediaElement.setAttribute("controls", "controls");
+				mediaElement.setAttribute("playsinline", "");
+				mediaElement.setAttribute("preload", "metadata");
+				mediaElement.setAttribute("alt", fileName);
+				mediaElement.setAttribute("title", fileName);
+				mediaElement.setAttribute("style", "max-width:300px");
+				mediaElement.classList.add("embed");
 
-                let mediaElement = document.createElement("audio");
-                mediaElement.setAttribute("src", baseURL);
-                mediaElement.setAttribute("controls", "controls");
-                mediaElement.setAttribute("alt", fileName);
-                mediaElement.setAttribute("title", fileName);
-                mediaElement.classList.add("embed");
-                
-                element.appendChild(mediaElement);
-                embeddedElement = element;
-            }
-            if (settingsstuff().embeds) {
-                if (link.includes('www.youtube.com') || link.includes('m.youtube.com')) {      
-                const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\/\n\s]+\/(?:shorts\/)?|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-                const youtubeMobRegex = /^(https?:\/\/)?(m\.)?(youtube\.com\/(?:[^\/\n\s]+\/(?:shorts\/)?|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-                if (youtubeRegex.test(link) || youtubeMobRegex.test(link)) {
-                    let match
-                    let videoId
-                    if (youtubeRegex.test(link)) {
-                        match = link.match(youtubeRegex);
-                        videoId = match[4];
-                    } else {
-                        match = link.match(youtubeMobRegex);
-                        videoId = match[4];
-                    }
-                
-                    embeddedElement = document.createElement("iframe");
-                    embeddedElement.setAttribute("width", "100%");
-                    embeddedElement.setAttribute("height", "315");
-                    embeddedElement.setAttribute("style", "max-width:500px;");
-                    embeddedElement.setAttribute("class", "media");
-                    embeddedElement.setAttribute("src", "https://www.youtube-nocookie.com/embed/" + videoId);
-                    embeddedElement.setAttribute("title", "YouTube video player");
-                    embeddedElement.setAttribute("frameborder", "0");
-                    embeddedElement.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-                    embeddedElement.setAttribute("allowfullscreen", "");
-                }
-            } else if (link.includes('scratch.mit.edu/projects/')) {
-                console.warn(link);
-                const regex = /projects\/(\d+)/;
-                const match = link.match(regex);
-                if (match) {
-                    const trackId = match[1];
+				element.appendChild(mediaElement);
+				embeddedElement = element;
+			} else if (['mp3', 'wav', 'ogg', 'flac'].includes(fileExtension)) {
+				const element = document.createElement("div");
+				element.classList.add("media-outer");
 
-                    embeddedElement = document.createElement("div");
-                    embeddedElement.classList.add("scratch-embed");
+				let mediaElement = document.createElement("audio");
+				mediaElement.setAttribute("src", baseURL);
+				mediaElement.setAttribute("controls", "controls");
+				mediaElement.setAttribute("alt", fileName);
+				mediaElement.setAttribute("title", fileName);
+				mediaElement.classList.add("embed");
 
-                    const request = new XMLHttpRequest();
-                    request.open('GET', `https://trampoline.turbowarp.org/api/projects/${escapeHTML(trackId)}`);
-                    request.onload = () => {
-                        const data = JSON.parse(request.responseText);
-                        embeddedElement.innerHTML = `
+				element.appendChild(mediaElement);
+				embeddedElement = element;
+			}
+			if (settingsstuff().embeds) {
+				if (link.includes('www.youtube.com') || link.includes('m.youtube.com')) {
+					const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\/\n\s]+\/(?:shorts\/)?|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+					const youtubeMobRegex = /^(https?:\/\/)?(m\.)?(youtube\.com\/(?:[^\/\n\s]+\/(?:shorts\/)?|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+					if (youtubeRegex.test(link) || youtubeMobRegex.test(link)) {
+						let match
+						let videoId
+						if (youtubeRegex.test(link)) {
+							match = link.match(youtubeRegex);
+							videoId = match[4];
+						} else {
+							match = link.match(youtubeMobRegex);
+							videoId = match[4];
+						}
+
+						embeddedElement = document.createElement("iframe");
+						embeddedElement.setAttribute("width", "100%");
+						embeddedElement.setAttribute("height", "315");
+						embeddedElement.setAttribute("style", "max-width:500px;");
+						embeddedElement.setAttribute("class", "media");
+						embeddedElement.setAttribute("src", "https://www.youtube-nocookie.com/embed/" + videoId);
+						embeddedElement.setAttribute("title", "YouTube video player");
+						embeddedElement.setAttribute("frameborder", "0");
+						embeddedElement.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+						embeddedElement.setAttribute("allowfullscreen", "");
+					}
+				} else if (link.includes('scratch.mit.edu/projects/')) {
+					console.warn(link);
+					const regex = /projects\/(\d+)/;
+					const match = link.match(regex);
+					if (match) {
+						const trackId = match[1];
+
+						embeddedElement = document.createElement("div");
+						embeddedElement.classList.add("scratch-embed");
+
+						const request = new XMLHttpRequest();
+						request.open('GET', `https://trampoline.turbowarp.org/api/projects/${escapeHTML(trackId)}`);
+						request.onload = () => {
+							const data = JSON.parse(request.responseText);
+							embeddedElement.innerHTML = `
                         <a href="https://scratch.mit.edu/projects/${escapeHTML(trackId)}/" target="_blank"><div class="scratch-thumbnail" style="background-image: url(https://cdn.scratch.mit.edu/get_image/project/${escapeHTML(trackId)}_1080x1080.png);"></div></a>
                         <div class="scratch-title"><a href="https://scratch.mit.edu/projects/${escapeHTML(trackId)}/" target="_blank" class="scratch-link">${escapeHTML(data.title)}</a></div>
                         `
-                    }
-                    request.send();
-                    
-                    embeddedElement.classList.add("media");
-                }
-            } else if (link.includes('turbowarp.org/')) {
-                console.warn(link);
-                const regex = /\/(\d+)/;
-                const match = link.match(regex);
-                if (match) {
-                    const trackId = match[1];
+						}
+						request.send();
 
-                    embeddedElement = document.createElement("div");
-                    embeddedElement.classList.add("scratch-embed");
+						embeddedElement.classList.add("media");
+					}
+				} else if (link.includes('turbowarp.org/')) {
+					console.warn(link);
+					const regex = /\/(\d+)/;
+					const match = link.match(regex);
+					if (match) {
+						const trackId = match[1];
 
-                    const request = new XMLHttpRequest();
-                    request.open('GET', `https://trampoline.turbowarp.org/api/projects/${escapeHTML(trackId)}`);
-                    request.onload = () => {
-                        const data = JSON.parse(request.responseText);
-                        embeddedElement.innerHTML = `
+						embeddedElement = document.createElement("div");
+						embeddedElement.classList.add("scratch-embed");
+
+						const request = new XMLHttpRequest();
+						request.open('GET', `https://trampoline.turbowarp.org/api/projects/${escapeHTML(trackId)}`);
+						request.onload = () => {
+							const data = JSON.parse(request.responseText);
+							embeddedElement.innerHTML = `
                         <a href="https://turbowarp.org/${escapeHTML(trackId)}/" target="_blank"><div class="scratch-thumbnail" style="background-image: url(https://cdn.scratch.mit.edu/get_image/project/${escapeHTML(trackId)}_1080x1080.png);"></div></a>
                         <div class="scratch-title"><a href="https://turbowarp.org/${escapeHTML(trackId)}/" target="_blank" class="turbowarp-link">${escapeHTML(data.title)}</a></div>
                         `
-                    }
-                    request.send();
-                    
-                    embeddedElement.classList.add("media");
-                }
-            } else if (link.includes('darflen.com/posts/')) {
-                console.warn(link);
-                const regex = /posts\/([a-zA-Z0-9]+)/;
-                const match = link.match(regex);
-                if (match) {
-                    const trackId = match[1];
+						}
+						request.send();
 
-                    embeddedElement = document.createElement("div");
-                    embeddedElement.classList.add("darflen-embed");
+						embeddedElement.classList.add("media");
+					}
+				} else if (link.includes('darflen.com/posts/')) {
+					console.warn(link);
+					const regex = /posts\/([a-zA-Z0-9]+)/;
+					const match = link.match(regex);
+					if (match) {
+						const trackId = match[1];
 
-                    const request = new XMLHttpRequest();
-                    request.open('GET', `https://api.darflen.com/posts/${trackId}`);
-                    request.onload = () => {
-                        const data = JSON.parse(request.responseText);
-                        let post;
-                        if (data.post.content) {
-                            post = data.post.content;
-                        } else if (data.post.files) {
-                            post = `<font style='background:#1c1a23;border-radius:5px;'>User submitted image</font>`;
-                        }
-                        embeddedElement.innerHTML = `
+						embeddedElement = document.createElement("div");
+						embeddedElement.classList.add("darflen-embed");
+
+						const request = new XMLHttpRequest();
+						request.open('GET', `https://api.darflen.com/posts/${trackId}`);
+						request.onload = () => {
+							const data = JSON.parse(request.responseText);
+							let post;
+							if (data.post.content) {
+								post = data.post.content;
+							} else if (data.post.files) {
+								post = `<font style='background:#1c1a23;border-radius:5px;'>User submitted image</font>`;
+							}
+							embeddedElement.innerHTML = `
                         <a class="darflen-jump" href="https://darflen.com/posts/${escapeHTML(trackId)}/" target="_blank">
                             <div class="darflen-top-left">
                                 <img class="darflen-pfp" src="${escapeHTML(data.post.author.profile.images.icon.thumbnail)}">
                                 <div class="darflen-user-info">
                                     <span class="darflen-username">${escapeHTML(data.post.author.profile.username)}</span>
-                                    <span class="darflen-stats">${timeago(data.post.miscellaneous.creation_time*1000)} ago • ${data.post.stats.views} Views</span>
+                                    <span class="darflen-stats">${timeago(data.post.miscellaneous.creation_time * 1000)} ago • ${data.post.stats.views} Views</span>
                                 </div>
                             </div>
                             <div class="darflen-content">
@@ -446,26 +449,26 @@ function embed(links) {
                             </div>
                         </a>
                         `
-                    }
-                    request.send();
-                    
-                    embeddedElement.classList.add("media");
-                }
-            } else if (link.includes('wasteof.money/posts/')) {
-                console.warn(link);
-                const regex = /posts\/([a-zA-Z0-9]+)/;
-                const match = link.match(regex);
-                if (match) {
-                    const trackId = match[1];
+						}
+						request.send();
 
-                    embeddedElement = document.createElement("div");
-                    embeddedElement.classList.add("wasteof-embed");
+						embeddedElement.classList.add("media");
+					}
+				} else if (link.includes('wasteof.money/posts/')) {
+					console.warn(link);
+					const regex = /posts\/([a-zA-Z0-9]+)/;
+					const match = link.match(regex);
+					if (match) {
+						const trackId = match[1];
 
-                    const request = new XMLHttpRequest();
-                    request.open('GET', `https://corsproxy.io/?https://api.wasteof.money/posts/${escapeHTML(trackId)}`);
-                    request.onload = () => {
-                        const data = JSON.parse(request.responseText);
-                        embeddedElement.innerHTML = `
+						embeddedElement = document.createElement("div");
+						embeddedElement.classList.add("wasteof-embed");
+
+						const request = new XMLHttpRequest();
+						request.open('GET', `https://corsproxy.io/?https://api.wasteof.money/posts/${escapeHTML(trackId)}`);
+						request.onload = () => {
+							const data = JSON.parse(request.responseText);
+							embeddedElement.innerHTML = `
                         <a class="wasteof-jump" href="https://wasteof.money/posts/${escapeHTML(trackId)}/" target="_blank">
                             <div class="wasteof-top-left">
                                 <img class="wasteof-pfp" src="https://api.wasteof.money/users/${escapeHTML(data.poster.name)}/picture">
@@ -493,81 +496,81 @@ function embed(links) {
                             </div>
                         </a>
                         `
-                    }
-                    request.send();
-                    
-                    embeddedElement.classList.add("media");
-                }
-            } else if (link.includes('open.spotify.com/track')) {
-                const spotifyRegex = /track\/([a-zA-Z0-9]+)/;
-                const match = link.match(spotifyRegex);
-                if (match) {
-                    const trackId = match[1];
+						}
+						request.send();
 
-                    embeddedElement = document.createElement("iframe");
-                    embeddedElement.setAttribute("style", "border-radius: 12px;max-width:500px;");
-                    embeddedElement.setAttribute("src", `https://open.spotify.com/embed/track/${trackId}?utm_source=generator`);
-                    embeddedElement.setAttribute("width", "100%");
-                    embeddedElement.setAttribute("height", "80px");
-                    embeddedElement.setAttribute("frameBorder", "0");
-                    embeddedElement.setAttribute("allowfullscreen", "");
-                    embeddedElement.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
-                    embeddedElement.setAttribute("loading", "lazy");
-                    
-                    embeddedElement.classList.add("media");
-                }
-            } else if (link.includes('open.spotify.com/album')) {
-                const spotifyRegex = /album\/([a-zA-Z0-9]+)/;
-                const match = link.match(spotifyRegex);
-                if (match) {
-                    const trackId = match[1];
+						embeddedElement.classList.add("media");
+					}
+				} else if (link.includes('open.spotify.com/track')) {
+					const spotifyRegex = /track\/([a-zA-Z0-9]+)/;
+					const match = link.match(spotifyRegex);
+					if (match) {
+						const trackId = match[1];
 
-                    embeddedElement = document.createElement("iframe");
-                    embeddedElement.setAttribute("style", "border-radius: 12px;max-width:500px;");
-                    embeddedElement.setAttribute("src", `https://open.spotify.com/embed/album/${trackId}?utm_source=generator`);
-                    embeddedElement.setAttribute("width", "100%");
-                    embeddedElement.setAttribute("height", "352");
-                    embeddedElement.setAttribute("frameBorder", "0");
-                    embeddedElement.setAttribute("allowfullscreen", "");
-                    embeddedElement.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
-                    embeddedElement.setAttribute("loading", "lazy");
-                }
-            } else if (link.includes('tenor.com')) {
-                const tenorRegex = /\d+$/;
-                const tenorMatch = link.match(tenorRegex);
-                const postId = tenorMatch ? tenorMatch[0] : null;
+						embeddedElement = document.createElement("iframe");
+						embeddedElement.setAttribute("style", "border-radius: 12px;max-width:500px;");
+						embeddedElement.setAttribute("src", `https://open.spotify.com/embed/track/${trackId}?utm_source=generator`);
+						embeddedElement.setAttribute("width", "100%");
+						embeddedElement.setAttribute("height", "80px");
+						embeddedElement.setAttribute("frameBorder", "0");
+						embeddedElement.setAttribute("allowfullscreen", "");
+						embeddedElement.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+						embeddedElement.setAttribute("loading", "lazy");
 
-                if (postId) {
-                    embeddedElement = document.createElement('div');
-                    embeddedElement.className = 'tenor-gif-embed';
-                    embeddedElement.setAttribute('data-postid', postId);
-                    embeddedElement.setAttribute('data-share-method', 'host');
-                    embeddedElement.setAttribute('data-style', 'width: 100%; height: 100%; border-radius: 5px; max-width: 400px; aspect-ratio: 1 / 1; max-height: 400px;');
-                    
-                    embeddedElement.classList.add("media");
-                    
-                    let scriptTag = document.createElement('script');
-                    scriptTag.setAttribute('type', 'text/javascript');
-                    scriptTag.setAttribute('src', 'embed.js');
-                    embeddedElement.appendChild(scriptTag);
-                }
-            }
-        }
-            if (embeddedElement) {
-                embeddedElements.push(embeddedElement);
-            }
-        });
-        return embeddedElements;
-    }
+						embeddedElement.classList.add("media");
+					}
+				} else if (link.includes('open.spotify.com/album')) {
+					const spotifyRegex = /album\/([a-zA-Z0-9]+)/;
+					const match = link.match(spotifyRegex);
+					if (match) {
+						const trackId = match[1];
+
+						embeddedElement = document.createElement("iframe");
+						embeddedElement.setAttribute("style", "border-radius: 12px;max-width:500px;");
+						embeddedElement.setAttribute("src", `https://open.spotify.com/embed/album/${trackId}?utm_source=generator`);
+						embeddedElement.setAttribute("width", "100%");
+						embeddedElement.setAttribute("height", "352");
+						embeddedElement.setAttribute("frameBorder", "0");
+						embeddedElement.setAttribute("allowfullscreen", "");
+						embeddedElement.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+						embeddedElement.setAttribute("loading", "lazy");
+					}
+				} else if (link.includes('tenor.com')) {
+					const tenorRegex = /\d+$/;
+					const tenorMatch = link.match(tenorRegex);
+					const postId = tenorMatch ? tenorMatch[0] : null;
+
+					if (postId) {
+						embeddedElement = document.createElement('div');
+						embeddedElement.className = 'tenor-gif-embed';
+						embeddedElement.setAttribute('data-postid', postId);
+						embeddedElement.setAttribute('data-share-method', 'host');
+						embeddedElement.setAttribute('data-style', 'width: 100%; height: 100%; border-radius: 5px; max-width: 400px; aspect-ratio: 1 / 1; max-height: 400px;');
+
+						embeddedElement.classList.add("media");
+
+						let scriptTag = document.createElement('script');
+						scriptTag.setAttribute('type', 'text/javascript');
+						scriptTag.setAttribute('src', 'embed.js');
+						embeddedElement.appendChild(scriptTag);
+					}
+				}
+			}
+			if (embeddedElement) {
+				embeddedElements.push(embeddedElement);
+			}
+		});
+		return embeddedElements;
+	}
 }
 
 function createButtonContainer(p) {
-    let buttonContainer = document.createElement("div");
-    buttonContainer.classList.add("buttonContainer");
-    if (settingsstuff().showpostbuttons) {
-        buttonContainer.classList.add("visibleButtonContainer");
-    }
-    buttonContainer.innerHTML = `
+	let buttonContainer = document.createElement("div");
+	buttonContainer.classList.add("buttonContainer");
+	if (settingsstuff().showpostbuttons) {
+		buttonContainer.classList.add("visibleButtonContainer");
+	}
+	buttonContainer.innerHTML = `
     <div class='toolbarContainer'>
         <div class='toolButton tooltip' onclick='sharepost()' aria-label="share" data-tooltip="${lang().action.share}" title="share" tabindex="0">
             <svg viewBox='0 0 20 20' fill='currentColor' width='19' height='19'><path d='M12.9297 3.25007C12.7343 3.05261 12.4154 3.05226 12.2196 3.24928L11.5746 3.89824C11.3811 4.09297 11.3808 4.40733 11.5739 4.60245L16.5685 9.64824C16.7614 9.84309 16.7614 10.1569 16.5685 10.3517L11.5739 15.3975C11.3808 15.5927 11.3811 15.907 11.5746 16.1017L12.2196 16.7507C12.4154 16.9477 12.7343 16.9474 12.9297 16.7499L19.2604 10.3517C19.4532 10.1568 19.4532 9.84314 19.2604 9.64832L12.9297 3.25007Z'></path><path d='M8.42616 4.60245C8.6193 4.40733 8.61898 4.09297 8.42545 3.89824L7.78047 3.24928C7.58466 3.05226 7.26578 3.05261 7.07041 3.25007L0.739669 9.64832C0.5469 9.84314 0.546901 10.1568 0.739669 10.3517L7.07041 16.7499C7.26578 16.9474 7.58465 16.9477 7.78047 16.7507L8.42545 16.1017C8.61898 15.907 8.6193 15.5927 8.42616 15.3975L3.43155 10.3517C3.23869 10.1569 3.23869 9.84309 3.43155 9.64824L8.42616 4.60245Z'></path></svg>
@@ -583,133 +586,133 @@ function createButtonContainer(p) {
         </div>` : ''}` : ''}
     </div>
     `;
-    let nwbtn
-    if (p.u === localStorage.getItem("username") && p.post_origin !== "inbox") {
-        if (page !== "recent") {
-            nwbtn = document.createElement("div");
-            nwbtn.classList.add("toolButton");
-            nwbtn.setAttribute("onclick", `editPost('${p.post_origin}', '${p._id}')`);
-            nwbtn.setAttribute("title", `edit`);
-            nwbtn.setAttribute("aria-label", `edit post`);
-            nwbtn.setAttribute("tabindex", "0");
-            nwbtn.classList.add("tooltip");
-            nwbtn.setAttribute("data-tooltip", `${lang().action.edit}`);
-            nwbtn.innerHTML = `
+	let nwbtn
+	if (p.u === localStorage.getItem("username") && p.post_origin !== "inbox") {
+		if (page !== "recent") {
+			nwbtn = document.createElement("div");
+			nwbtn.classList.add("toolButton");
+			nwbtn.setAttribute("onclick", `editPost('${p.post_origin}', '${p._id}')`);
+			nwbtn.setAttribute("title", `edit`);
+			nwbtn.setAttribute("aria-label", `edit post`);
+			nwbtn.setAttribute("tabindex", "0");
+			nwbtn.classList.add("tooltip");
+			nwbtn.setAttribute("data-tooltip", `${lang().action.edit}`);
+			nwbtn.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.2929 9.8299L19.9409 9.18278C21.353 7.77064 21.353 5.47197 19.9409 4.05892C18.5287 2.64678 16.2292 2.64678 14.817 4.05892L14.1699 4.70694L19.2929 9.8299ZM12.8962 5.97688L5.18469 13.6906L10.3085 18.813L18.0201 11.0992L12.8962 5.97688ZM4.11851 20.9704L8.75906 19.8112L4.18692 15.239L3.02678 19.8796C2.95028 20.1856 3.04028 20.5105 3.26349 20.7337C3.48669 20.9569 3.8116 21.046 4.11851 20.9704Z" fill="currentColor"></path></svg>
             `;
-            buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
-        }
-        nwbtn = document.createElement("div");
-        nwbtn.classList.add("toolButton");
-        nwbtn.setAttribute("onclick", `deletePost("${p._id}")`);
-        nwbtn.setAttribute("title", `delete`);
-        nwbtn.setAttribute("aria-label", `delete post`);
-        nwbtn.setAttribute("tabindex", "0");
-        nwbtn.classList.add("tooltip");
-        nwbtn.setAttribute("data-tooltip", `${lang().action.delete}`);
-        nwbtn.innerHTML = `
+			buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
+		}
+		nwbtn = document.createElement("div");
+		nwbtn.classList.add("toolButton");
+		nwbtn.setAttribute("onclick", `deletePost("${p._id}")`);
+		nwbtn.setAttribute("title", `delete`);
+		nwbtn.setAttribute("aria-label", `delete post`);
+		nwbtn.setAttribute("tabindex", "0");
+		nwbtn.classList.add("tooltip");
+		nwbtn.setAttribute("data-tooltip", `${lang().action.delete}`);
+		nwbtn.innerHTML = `
         <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path><path fill="currentColor" d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z"></path></svg>
         `;
-        buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
-    } else if (localStorage.getItem("permissions") === "1") {
-        nwbtn = document.createElement("div");
-        nwbtn.classList.add("toolButton");
-        nwbtn.setAttribute("onclick", `modDeletePost("${p._id}")`);
-        nwbtn.setAttribute("title", `mod delete`);
-        nwbtn.setAttribute("aria-label", `mod delete`);
-        nwbtn.setAttribute("tabindex", "0");
-        nwbtn.classList.add("tooltip");
-        nwbtn.setAttribute("data-tooltip", `${lang().action.moddel}`);
-        nwbtn.innerHTML = `
+		buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
+	} else if (localStorage.getItem("permissions") === "1") {
+		nwbtn = document.createElement("div");
+		nwbtn.classList.add("toolButton");
+		nwbtn.setAttribute("onclick", `modDeletePost("${p._id}")`);
+		nwbtn.setAttribute("title", `mod delete`);
+		nwbtn.setAttribute("aria-label", `mod delete`);
+		nwbtn.setAttribute("tabindex", "0");
+		nwbtn.classList.add("tooltip");
+		nwbtn.setAttribute("data-tooltip", `${lang().action.moddel}`);
+		nwbtn.innerHTML = `
         <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path><path fill="currentColor" d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z"></path></svg>
         `;
-        buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
-    }
-    
-    if (localStorage.getItem("permissions") === "1") {
-        nwbtn = document.createElement("div");
-        nwbtn.classList.add("toolButton");
-        nwbtn.setAttribute("onclick", `modPostModal("${p._id}")`);
-        nwbtn.setAttribute("title", `moderate`);
-        nwbtn.setAttribute("aria-label", `moderate post`);
-        nwbtn.setAttribute("tabindex", "0");
-        nwbtn.classList.add("tooltip");
-        nwbtn.setAttribute("data-tooltip", `${lang().action.modpost}`);
-        nwbtn.innerHTML = `
+		buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
+	}
+
+	if (localStorage.getItem("permissions") === "1") {
+		nwbtn = document.createElement("div");
+		nwbtn.classList.add("toolButton");
+		nwbtn.setAttribute("onclick", `modPostModal("${p._id}")`);
+		nwbtn.setAttribute("title", `moderate`);
+		nwbtn.setAttribute("aria-label", `moderate post`);
+		nwbtn.setAttribute("tabindex", "0");
+		nwbtn.classList.add("tooltip");
+		nwbtn.setAttribute("data-tooltip", `${lang().action.modpost}`);
+		nwbtn.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.00001C15.56 6.00001 12.826 2.43501 12.799 2.39801C12.421 1.89801 11.579 1.89801 11.201 2.39801C11.174 2.43501 8.44 6.00001 5 6.00001C4.447 6.00001 4 6.44801 4 7.00001V14C4 17.807 10.764 21.478 11.534 21.884C11.68 21.961 11.84 21.998 12 21.998C12.16 21.998 12.32 21.96 12.466 21.884C13.236 21.478 20 17.807 20 14V7.00001C20 6.44801 19.553 6.00001 19 6.00001ZM15 16L12 14L9 16L10 13L8 11H11L12 8.00001L13 11H16L14 13L15 16Z"></path></svg>
         `;
-        buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
-    }
+		buttonContainer.querySelector('.toolbarContainer').prepend(nwbtn);
+	}
 
-    return buttonContainer;
+	return buttonContainer;
 }
 
 function oldMarkdown(content) {
-    const escapedinput = content
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+	const escapedinput = content
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
 
-    const textContent = escapedinput
-        .replace(/\*\*\*\*(.*?[^\*])\*\*\*\*/g, '$1')
-        .replace(/\*\*(.*?[^\*])\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?[^\*])\*/g, '<em>$1</em>')
-        .replace(/```([\s\S]*?)```/g, '<div class="code"><code>$1</code></div>')
-        .replace(/``([^`]+)``/g, '<code>$1</code>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        .replace(/^#+ (.*?$)/gm, (match, group1) => {
-            const hash = match.match(/^#+/)[0].length;
-            return `<h${hash}>${group1}</h${hash}>`;
-        })
-        .replace(/^&gt; (.*?$)/gm, '<blockquote>$1</blockquote>')
-        .replace(/~~([\s\S]*?)~~/g, '<del>$1</del>')
-        .replace(/(?:https?|ftp):\/\/[^\s(){}[\]]+/g, function (url) {
-            return `<a href="${url.replace(/<\/?blockquote>/g, '')}" target="_blank">${url}</a>`;
-        })
-        .replace(/&lt;:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.webp?size=96&quality=lossless" alt="$1" width="16px" class="emoji">')
-        .replace(/&lt;a:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.gif?size=96&quality=lossless" alt="$1" width="16px" class="emoji">')
-        .replace(/\n/g, '<br>');
+	const textContent = escapedinput
+		.replace(/\*\*\*\*(.*?[^\*])\*\*\*\*/g, '$1')
+		.replace(/\*\*(.*?[^\*])\*\*/g, '<strong>$1</strong>')
+		.replace(/\*(.*?[^\*])\*/g, '<em>$1</em>')
+		.replace(/```([\s\S]*?)```/g, '<div class="code"><code>$1</code></div>')
+		.replace(/``([^`]+)``/g, '<code>$1</code>')
+		.replace(/`([^`]+)`/g, '<code>$1</code>')
+		.replace(/^#+ (.*?$)/gm, (match, group1) => {
+			const hash = match.match(/^#+/)[0].length;
+			return `<h${hash}>${group1}</h${hash}>`;
+		})
+		.replace(/^&gt; (.*?$)/gm, '<blockquote>$1</blockquote>')
+		.replace(/~~([\s\S]*?)~~/g, '<del>$1</del>')
+		.replace(/(?:https?|ftp):\/\/[^\s(){}[\]]+/g, function (url) {
+			return `<a href="${url.replace(/<\/?blockquote>/g, '')}" target="_blank">${url}</a>`;
+		})
+		.replace(/&lt;:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.webp?size=96&quality=lossless" alt="$1" width="16px" class="emoji">')
+		.replace(/&lt;a:(\w+):(\d+)&gt;/g, '<img src="https://cdn.discordapp.com/emojis/$2.gif?size=96&quality=lossless" alt="$1" width="16px" class="emoji">')
+		.replace(/\n/g, '<br>');
 
-    if (/^(?:(?!\d)(?:\p{Emoji}|[\u200d\ufe0f\u{E0061}-\u{E007A}\u{E007F}]))+$/u.test(content)) {
-        textContent = '<span class="big">' + textContent + '</span>';
-    }
+	if (/^(?:(?!\d)(?:\p{Emoji}|[\u200d\ufe0f\u{E0061}-\u{E007A}\u{E007F}]))+$/u.test(content)) {
+		textContent = '<span class="big">' + textContent + '</span>';
+	}
 
-    return textContent;
+	return textContent;
 }
 
 function formatSize(bytes) {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes === 0) return '0 Byte';
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    const size = (bytes / Math.pow(1024, i)).toFixed(2);
-    return `${size} ${sizes[i]}`;
+	const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+	if (bytes === 0) return '0 Byte';
+	const i = Math.floor(Math.log(bytes) / Math.log(1024));
+	const size = (bytes / Math.pow(1024, i)).toFixed(2);
+	return `${size} ${sizes[i]}`;
 }
 
 function timeago(date) {
-    var seconds = Math.floor((new Date() - date) / 1000);
-  
-    var interval = seconds / 31536000;
-  
-    if (interval > 1) {
-      return Math.floor(interval) + " years";
-    }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-      return Math.floor(interval) + " months";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-      return Math.floor(interval) + " days";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-      return Math.floor(interval) + " hours";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-      return Math.floor(interval) + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
+	var seconds = Math.floor((new Date() - date) / 1000);
+
+	var interval = seconds / 31536000;
+
+	if (interval > 1) {
+		return Math.floor(interval) + " years";
+	}
+	interval = seconds / 2592000;
+	if (interval > 1) {
+		return Math.floor(interval) + " months";
+	}
+	interval = seconds / 86400;
+	if (interval > 1) {
+		return Math.floor(interval) + " days";
+	}
+	interval = seconds / 3600;
+	if (interval > 1) {
+		return Math.floor(interval) + " hours";
+	}
+	interval = seconds / 60;
+	if (interval > 1) {
+		return Math.floor(interval) + " minutes";
+	}
+	return Math.floor(seconds) + " seconds";
 }
